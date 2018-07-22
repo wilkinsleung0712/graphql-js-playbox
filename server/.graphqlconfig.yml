@@ -1,0 +1,21 @@
+projects:
+  app:
+    schemaPath: ./schema.graphql
+    extensions:
+      endpoints:
+        default: http://localhost:4000
+  database:
+    schemaPath: src/generated/prisma.graphql
+    extensions:
+      prisma: ./database/prisma.yml
+
+
+
+# So, what’s going on here? You’re defining two projects. As you might guess, each project represents one of your GraphQL APIs - the application layer (graphql-yoga) and the database layer (Prisma).
+# For each project, you’re specifying a schemaPath. This is simply the path to the GraphQL schema that defines each API.
+# For the app project, you’re further specifying an endpoint which is the URL where the GraphQL server is running when it’s started.
+# The database project on the other hand only points to the prisma.yml file. In fact, pointing to this file also provides information about the endpoint of the Prisma service, since all the information that’s needed to compose the endpoint can be found in there.
+# There are two main benefits you now get from this setup:
+# You can interact with both GraphQL APIs in a Playground side-by-side.
+# When deploying the Prisma service with prisma deploy, the Prisma CLI downloads the generated Prisma database schema into the specified location.
+# The Prisma CLI also uses information that’s provided in .graphqlconfig.yml. Therefore, you can now run prisma commands from the root directory rather than from the database directory.

@@ -1,3 +1,8 @@
+# import Link from "./src/generated/prisma.graphql"
+
+# This import syntax used here is not part of the official GraphQL specification (yet!). It comes from the graphql-import package which is being used by graphql-yoga to resolve any dependencies across .graphql files.
+# Note that in this case, it wouldn’t actually make a difference if you left the Link type as it was. However, it is a lot more convenient to only define the Link type once and then reuse that definition. Otherwise you’d have to update multiple definitions whenever you’re changing the Link type.
+# Great, that’s it! You can finally start the server now and test the API now!
 type Query {
   info: String!
   feed: [Link!]!
@@ -9,10 +14,4 @@ type Mutation {
   post(url: String!, description: String!): Link!
   updateLink(id: ID!, url: String, description: String): Link
   deleteLink(id: ID!): Link
-}
-
-type Link {
-  id: ID!
-  description: String!
-  url: String!
 }

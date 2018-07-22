@@ -1,4 +1,5 @@
 const {GraphQLServer} = require('graphql-yoga');
+const {Prisma} = require('prisma-binding');
 
 // 
 // The resolvers object is the actual implementation of the GraphQL schema.
@@ -6,37 +7,29 @@ const {GraphQLServer} = require('graphql-yoga');
 const resolvers = {
     Query: {
         info: () => `This is the API of a Hackernews Clone`,
-        feed: () => links,
-        link: (root,args) => {
-            return links.find(link => link.id === args.id);
+        feed: (root, args, context, info) => {
+            return context.db.query.links({}, info)
         }
     },
     Mutation: {
-        post: (root,args) => {
-            const link = {
-                id: `link-${idCount++}`,
-                description: args.description,
-                url: args.url
-            }
-            links.push(link);
-            return link;
+        post: (root,args, context, info) => {
+            return context.db.mutation.createLink({
+                data: {
+                    url: args.url,
+                    description: args.description
+                },
+            }, info)
         },
-        updateLink: (root,args) => {
-            // lets filter the one we interested
-            let index = links.findIndex(link => link.id === args.id);
-            if (index !== -1) {
-                let newLink = {
-                    'id': args.id,
-                    'description': args.description,
-                    'url': args.url
-                }
-                // update by index
-                links[index] = newLink;
-                // return newly added link
-                return newLink;
-            }
-            console.warn(`Unable to find link on ID:${args.id}`);
-            return null;
+        updateLink: (root,args, context, info) => {
+            return context.db.mutation.updateLink({
+                    data: {
+                        url: args.url,
+                        description: args.description
+                    },
+                    where: {
+                        id: args.id
+                    }
+            }, info)
         },
         deleteLink: (root, args) => {
             let index = links.findIndex(link => link.id === args.id);
@@ -55,6 +48,15 @@ const resolvers = {
 const server = new GraphQLServer({
   typeDefs: './schema.graphql',
   resolvers,
+  context: req => ({
+      ...req,
+      db: new Prisma({
+          typeDefs: 'src/generated/prisma.graphql',
+          endpoint: 'https://eu1.prisma.sh/wilkinsweiqiangliang-518a49/graphql-db/dev',
+          secret: 'mysecret123',
+          debug: true,
+      })
+  })
 })
 
 server.start(() => console.log(`Server is running on http://localhost:4000`));
