@@ -1,13 +1,5 @@
 const {GraphQLServer} = require('graphql-yoga');
 
-let links = [{
-    id: 'link-0',
-    url: 'www.howtographql.com',
-    description: 'Fullstack tutorial for GraphQL'
-  }]
-
-// temporary solution for id auto increasement
-let idCount = links.length;
 // 
 // The resolvers object is the actual implementation of the GraphQL schema.
 //  Notice how its structure is identical to the structure of the type definition inside typeDefs: Query.info.
