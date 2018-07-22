@@ -14,7 +14,10 @@ let idCount = links.length;
 const resolvers = {
     Query: {
         info: () => `This is the API of a Hackernews Clone`,
-        feed: () => links
+        feed: () => links,
+        link: (root,args) => {
+            return links.find(link => link.id === args.id);
+        }
     },
     Mutation: {
         post: (root,args) => {
@@ -25,6 +28,33 @@ const resolvers = {
             }
             links.push(link);
             return link;
+        },
+        updateLink: (root,args) => {
+            // lets filter the one we interested
+            let index = links.findIndex(link => link.id === args.id);
+            if (index !== -1) {
+                let newLink = {
+                    'id': args.id,
+                    'description': args.description,
+                    'url': args.url
+                }
+                // update by index
+                links[index] = newLink;
+                // return newly added link
+                return newLink;
+            }
+            console.warn(`Unable to find link on ID:${args.id}`);
+            return null;
+        },
+        deleteLink: (root, args) => {
+            let index = links.findIndex(link => link.id === args.id);
+            if (index !== -1) {
+                let deletedLink = links[index];
+                links.splice(index,1);
+                return deletedLink;
+            }
+            console.warn(`Unable to find link on ID:${args.id}`);
+            return null;
         }
     },
 }

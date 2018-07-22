@@ -1,0 +1,41 @@
+# Try to write your query here
+query {
+  feed {
+    id
+    description
+    url
+  }
+}
+
+mutation {
+  post(
+    url: "www.prisma.io"
+    description: "Prisma turns your database into a GraphQL API"
+  ) {
+    id
+  }
+}
+
+query {
+  link(id:"link-0"){
+    id
+    description
+    url
+  }
+}
+
+mutation {
+  updateLink(id:"link-2",url:"postupdate.html",description:"i updated it") {
+    id
+    description
+    url
+  }
+}
+
+mutation {
+  deleteLink(id:"link-2") {
+    id
+    description
+    url
+  }
+}
