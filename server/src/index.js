@@ -21,13 +21,19 @@ let links = [{
     url: 'www.howtographql.com',
     description: 'Fullstack tutorial for GraphQL'
   }]
-  
+
 // 
 // The resolvers object is the actual implementation of the GraphQL schema.
 //  Notice how its structure is identical to the structure of the type definition inside typeDefs: Query.info.
 const resolvers = {
     Query: {
-        info: () => `This is the API of a Hackernews Clone`
+        info: () => `This is the API of a Hackernews Clone`,
+        feed: () => links
+    },
+    Link: {
+        id: (root) => root.id,
+        description: (root) => root.description,
+        url: (root) => root.url
     }
 }
 
