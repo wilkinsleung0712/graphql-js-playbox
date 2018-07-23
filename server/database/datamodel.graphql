@@ -4,4 +4,15 @@ type Link {
   updatedAt: DateTime!
   description: String!
   url: String!
+  #one link to one user
+  postedBy: User
+}
+
+type User {
+  id: ID! @unique
+  name: String!
+  email: String! @unique
+  password: String!
+  # user might have none or many links
+  links: [Link!]!
 }
