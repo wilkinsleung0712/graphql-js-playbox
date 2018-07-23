@@ -1,7 +1,10 @@
 # import Link from "./src/generated/prisma.graphql"
 
-# This import syntax used here is not part of the official GraphQL specification (yet!). It comes from the graphql-import package which is being used by graphql-yoga to resolve any dependencies across .graphql files.
-# Note that in this case, it wouldn’t actually make a difference if you left the Link type as it was. However, it is a lot more convenient to only define the Link type once and then reuse that definition. Otherwise you’d have to update multiple definitions whenever you’re changing the Link type.
+# This import syntax used here is not part of the official GraphQL specification (yet!). 
+# It comes from the graphql-import package which is being used by graphql-yoga to resolve any dependencies across .graphql files.
+# Note that in this case, it wouldn’t actually make a difference if you left the Link type as it was. 
+# However, it is a lot more convenient to only define the Link type once and then reuse that definition. 
+# Otherwise you’d have to update multiple definitions whenever you’re changing the Link type.
 # Great, that’s it! You can finally start the server now and test the API now!
 type Query {
   info: String!
@@ -14,4 +17,23 @@ type Mutation {
   post(url: String!, description: String!): Link!
   updateLink(id: ID!, url: String, description: String): Link
   deleteLink(id: ID!): Link
+  # Sign up for user
+  signup(email: String!, password: String!, name:String): AuthPayload
+  # Login for user
+  login(name: String!, password:String!): AuthPayload
+}
+
+type AuthPayload {
+  token: String
+  user: User
+}
+
+# in this case you’re using it to hide certain information of the User type in the application schema. 
+# Namely, the password field (though you’re going to store a hashed version of the password as you’ll see soon 
+# - so even if it was exposed here clients wouldn’t be able to directly query it).
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  links: [Link!]!
 }
